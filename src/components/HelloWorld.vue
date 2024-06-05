@@ -25,7 +25,7 @@ export default {
   methods:{
     getMsg(){
       var params = {
-        nae:"abc"
+        name:"abc"
       }
       test(params).then(response=>{
           this.msg = response.data
