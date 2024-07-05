@@ -17,7 +17,7 @@ const reqAxios = axios.create({
 reqAxios.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
-    // 调用接口时统一为请求头挂载 Authorization 字段
+    // 调用接口时统一为请求头挂载 Authorizatsion 字段
     // if ($store.state.token) {
     //   config.headers.Authorization = $store.state.token
     // }

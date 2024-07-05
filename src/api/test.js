@@ -7,4 +7,11 @@ export function test(query) {
         params: query
     })
 }
+
+export function testMQTT() {
+    return request({
+        url: '/users/testMQTT',
+        method: 'get',
+    })
+}
   

@@ -6,6 +6,7 @@
 const path = require('path');
 module.exports = {
   // 选项...
+  lintOnSave: true ,
   // 基本路径
   publicPath: process.env.NODE_ENV === 'production' ? '/production-sub-path/' : '/',
   // 输出文件目录
