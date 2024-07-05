@@ -130,7 +130,7 @@ export default {
   name: 'HelloWorld',
   data(){
     return {
-      activeName: 'third',
+      activeName: 'first',
       form:{
         tenant_id: 0,
         device_id: "cnc_100",
@@ -531,7 +531,7 @@ export default {
           }else if(this.activeName=="second"){
             this.multipleStatus = "未发送"
           }else if(this.activeName=="third"){
-
+            this.loopStatus = "未发送"
           }
         }
       }).catch((error) => {  
