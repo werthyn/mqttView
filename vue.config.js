@@ -3,18 +3,29 @@
 //   transpileDependencies: true
 // })
 
-const path = require('path');
+const path = require('path')
+const defaultSettings = require('./src/settings.js')
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+// const port = process.env.port || process.env.npm_config_port || 85 // 端口
+const port =  85 // 端口
+
 module.exports = {
   // 选项...
   lintOnSave: true ,
   // 基本路径
-  publicPath: process.env.NODE_ENV === 'production' ? '/production-sub-path/' : '/',
+  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
+  // publicPath: process.env.NODE_ENV === 'production' ? '/production-sub-path/' : '/',
   // 输出文件目录
   outputDir: 'dist',
-  // 静态资源目录 (js, css, img, fonts)
-  assetsDir: 'assets',
+  // 用于放置生成的静态资源 (js、css、img、fonts) 的；（项目打包之后，静态资源会放在这个文件夹下）
+  assetsDir: 'static',
   // 生产环境是否生成 sourceMap 文件
   productionSourceMap: false,
+  // 是否开启eslint保存检测，有效值：ture | false | 'error'
+  lintOnSave: process.env.NODE_ENV === 'development',
   // CSS 相关选项
   css: {
     // 是否使用css分离插件 ExtractTextPlugin
@@ -25,7 +36,7 @@ module.exports = {
   // devServer 代理设置
   devServer: {
     host: '0.0.0.0',
-    port: 85,
+    port: port,
     https: false,
     open: true,
     proxy: {
@@ -34,7 +45,8 @@ module.exports = {
         target: 'http://localhost:3001',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          // '^/api': ''
+          ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       }
     }
@@ -47,7 +59,7 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src')
+        '@': resolve('src')
       }
     }
   },

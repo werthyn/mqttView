@@ -6,7 +6,7 @@
     <div style="height: 700px;box-sizing: border-box;border: 1px solid #ccc;margin: 10px 20px;padding: 10px 20px;">
       <el-row>
         <el-tabs v-model="activeName" @tab-click="handleClick" :before-leave="beforeLeave">
-          <!-- <el-tab-pane label="单设备发送" name="first">
+          <el-tab-pane label="单设备发送" name="first">
             <el-form ref="form" :model="form" :rules="rules" label-width="90px">
               <el-row>
 
@@ -71,16 +71,14 @@
                     <el-form-item label="时间间隔:" prop="interval" style="display: inline-block;">
                       <el-input v-model.number="form.interval" placeholder="请输入时间间隔" style="width: 200px;" :disabled="!creatMsgStatus"/>
                     </el-form-item>
-                    ----------------------------------------------
-                    <el-form-item label="中止时间:" prop="stopTime" style="display: inline-block;margin-right: 10px;"  v-if="!frequencyShow" >
+                    <!-- <el-form-item label="中止时间:" prop="stopTime" style="display: inline-block;margin-right: 10px;"  v-if="!frequencyShow" >
                       <el-date-picker
                         v-model="form.stopTime"
                         type="datetime"
                         placeholder="选择时间"
                         style="width: 200px;" :disabled="!creatMsgStatus">
                       </el-date-picker>
-                    </el-form-item>
-                    ----------------------------------------------
+                    </el-form-item> -->
                   </el-row>
                   <el-row v-if="some">
                     <el-form-item label="" prop="randomValue" label-width="20px" style="display: inline-block;">
@@ -105,11 +103,11 @@
 
               </el-row>
             </el-form>
-          </el-tab-pane> -->
+          </el-tab-pane>
 
 
-          <el-tab-pane label="信息发送" name="second">
-            <el-form ref="forms" :model="forms" :rules="formsRules" label-width="90px">
+          <el-tab-pane label="多设备发送" name="second">
+            <el-form ref="forms" :model="forms" :rules="fromsRules" label-width="90px">
               <el-row>
                 <el-col :span="5" style="border-right: 1px solid #ccc;height: 630px;">
                   <!-- <el-row>
@@ -119,22 +117,7 @@
                   </el-row> -->
                   <el-row>
                     <div style="width: 200px;margin: 0 auto;">
-                      <el-form-item label="" prop="num" label-width="0px" >
-                        <el-radio-group v-model="forms.num" @input="changeFormsNum(forms.num)">  
-                          <el-radio label="1" :disabled="!formsStatus">单设备</el-radio>
-                          <el-radio label="2" :disabled="!formsStatus">多设备</el-radio>
-                        </el-radio-group>
-                      </el-form-item>
-                    </div>
-
-                  </el-row>
-
-                  <el-row>
-                    <div style="width: 200px;margin: 0 auto;">
-                      <!-- <span style="display: inline-block;margin-bottom: 10px;">tenant_id: {{forms.tenant_id}}</span> -->
-                      <el-form-item label="tenant_id:" prop="tenant_id"  v-if="fromsFrequencyShow" >
-                        <el-input v-model.number="forms.tenant_id" placeholder="请输入tenant_id" style="width: 100px;" :disabled="!formsStatus"/>
-                      </el-form-item>
+                      <span style="display: inline-block;margin-bottom: 10px;">tenant_id: {{forms.tenant_id}}</span>
                     </div>
 
                   </el-row>
@@ -183,16 +166,11 @@
                 </el-col>
                 <el-col :span="19">
                   <el-scrollbar style="height:630px;padding-left: 20px;">
-                    <div style="width: 100%;height: 380px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;">
+                    <div style="width: 100%;height: 335px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;">
                       <el-row>
-                        <el-col :span="6" style="height: 380px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
+                        <el-col :span="6" style="height: 335px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
                           <el-row style="margin-bottom: 10px;">
-                            <!-- 设备：cnc_100 -->
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="device_id" prop="device_id1" label-width="70px" >
-                                <el-input v-model="forms.device_id1" placeholder="请输入device_id" style="width: 130px;" :disabled="!formsStatus"/>
-                              </el-form-item>
-                            </div>
+                            设备：cnc_100
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
@@ -203,34 +181,26 @@
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="value固定值:" prop="value1" label-width="110px" >
-                                <el-input v-model="forms.value1" placeholder="请输入固定值" style="width: 90px;" :disabled="!formsStatus" />
+                              <el-form-item label="unit" prop="unit1" label-width="70px" >
+                                <el-input v-model="forms.unit1" placeholder="请输入unit" style="width: 130px;" readonly/>
                               </el-form-item>
                             </div>
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="unit" prop="unit1" label-width="70px" >
-                                <el-input v-model="forms.unit1" placeholder="请输入unit" style="width: 130px;"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <!-- <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="timestamp" prop="timestamp1" label-width="90px" >
                                 <el-input v-model="forms.timestamp1" placeholder="请输入timestamp" style="width: 110px;" readonly/>
                               </el-form-item>
                             </div>
-                          </el-row> -->
-
-                          <el-row v-if="!this.forms.value1">
+                          </el-row>
+                          <el-row>
                             <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="value最小值:" prop="min1" label-width="110px" >
                                 <el-input v-model="forms.min1" placeholder="请输入最小值" style="width: 90px;" :disabled="!formsStatus"/>
                               </el-form-item>
                             </div>
                           </el-row>
-                          <el-row v-if="!this.forms.value1">
+                          <el-row>
                             <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="value最大值:" prop="max1" label-width="110px" >
                                 <el-input v-model="forms.max1" placeholder="请输入最大值" style="width: 90px;" :disabled="!formsStatus"/>
@@ -248,16 +218,11 @@
                         </el-col>
                       </el-row>
                     </div>
-                    <div style="width: 100%;height: 380px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;" v-if="!(forms.num=='1')">
+                    <div style="width: 100%;height: 335px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;">
                       <el-row>
-                        <el-col :span="6" style="height: 380px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
+                        <el-col :span="6" style="height: 335px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
                           <el-row style="margin-bottom: 10px;">
-                            <!-- 设备：cnc_101 -->
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="device_id" prop="device_id2" label-width="70px" >
-                                <el-input v-model="forms.device_id2" placeholder="请输入device_id" style="width: 130px;" :disabled="!formsStatus"/>
-                              </el-form-item>
-                            </div>
+                            设备：cnc_101
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
@@ -268,33 +233,26 @@
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="value固定值:" prop="value2" label-width="110px" >
-                                <el-input v-model="forms.value2" placeholder="请输入固定值" style="width: 90px;" :disabled="!formsStatus"/>
+                              <el-form-item label="unit" prop="unit2" label-width="70px" >
+                                <el-input v-model="forms.unit2" placeholder="请输入unit" style="width: 130px;" readonly/>
                               </el-form-item>
                             </div>
                           </el-row>
                           <el-row>
                             <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="unit" prop="unit2" label-width="70px" >
-                                <el-input v-model="forms.unit2" placeholder="请输入unit" style="width: 130px;"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <!-- <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="timestamp" prop="timestamp2" label-width="90px" >
                                 <el-input v-model="forms.timestamp2" placeholder="请输入timestamp" style="width: 110px;" readonly/>
                               </el-form-item>
                             </div>
-                          </el-row> -->
-                          <el-row v-if="!this.forms.value2">
+                          </el-row>
+                          <el-row>
                             <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="value最小值:" prop="min2" label-width="110px" >
                                 <el-input v-model="forms.min2" placeholder="请输入最小值" style="width: 90px;" :disabled="!formsStatus"/>
                               </el-form-item>
                             </div>
                           </el-row>
-                          <el-row v-if="!this.forms.value2">
+                          <el-row>
                             <div style="width: 200px;margin: 0 auto;">
                               <el-form-item label="value最大值:" prop="max2" label-width="110px" >
                                 <el-input v-model="forms.max2" placeholder="请输入最大值" style="width: 90px;" :disabled="!formsStatus"/>
@@ -320,171 +278,6 @@
 
 
           </el-tab-pane>
-          <el-tab-pane label="数据上传" name="third">
-
-            <el-form ref="fastforms" :model="fastforms" :rules="fastformsRules" label-width="90px">
-              <el-row>
-                <el-col :span="7" style="border-right: 1px solid #ccc;height: 630px;">
-                  <!-- <el-row>
-                    <div style="width: 200px;margin: 0 auto;">
-                      <el-button size="small" @click="creatEquipment" :disabled="!fastformsStatus">新增设备</el-button>
-                    </div>
-                  </el-row> -->
-
-                  <el-row>
-                    <div style="width: 200px;margin: 0 auto;">
-                      <!-- <span style="display: inline-block;margin-bottom: 10px;">tenant_id: {{fastforms.tenant_id}}</span> -->
-                      <el-form-item label="tenant_id:" prop="tenant_id" >
-                        <el-input v-model.number="fastforms.tenant_id" placeholder="请输入tenant_id" style="width: 100px;" :disabled="!fastformsStatus"/>
-                      </el-form-item>
-                    </div>
-
-                  </el-row>
-
-                  <div>
-                    <el-row>
-                      <div style="width: 300px;margin: 0 auto;">
-                        <el-form-item label="起始时间:" prop="start">
-                          <el-date-picker
-                            v-model="fastforms.start"
-                            style="width: 200px;"
-                            type="datetime"
-                            placeholder="选择时间"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            default-time="12:00:00">
-                          </el-date-picker>
-                        </el-form-item>
-                      </div>
-                    </el-row>
-                  </div>
-                  <div>
-                    <el-row>
-                      <div style="width: 300px;margin: 0 auto;">
-                        <el-form-item label="起始timestamp:" prop="timestamp1" label-width="140px">
-                          <el-input v-model.number="fastforms.timestamp1" placeholder="请输入起始timestamp" style="width: 150px;" disabled />
-                        </el-form-item>
-                      </div>
-                    </el-row>
-                  </div>
-
-                  <div>
-                    <el-row>
-                      <div style="width: 300px;margin: 0 auto;">
-                        <el-form-item label="中止时间:" prop="end">
-                          <el-date-picker
-                            v-model="fastforms.end"
-                            style="width: 200px;"
-                            type="datetime"
-                            placeholder="选择时间"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            default-time="12:00:00">
-                          </el-date-picker>
-                        </el-form-item>
-                      </div>
-                    </el-row>
-                  </div>
-                  <div>
-                    <el-row>
-                      <div style="width: 300px;margin: 0 auto;">
-                        <el-form-item label="中止timestamp:" prop="timestamp2" label-width="140px">
-                          <el-input v-model.number="fastforms.timestamp2" placeholder="请输入中止timestamp" style="width: 150px;" disabled/>
-                        </el-form-item>
-                      </div>
-                    </el-row>
-                  </div>
-
-                  <div>
-                    <el-row style="margin-bottom: 20px;">
-                      <div style="width: 200px;margin: 0 auto;">
-                        <el-form-item label="时间间隔:" prop="interval">
-                          <el-input v-model.number="fastforms.interval" placeholder="请输入时间间隔" style="width: 100px;" :disabled="!fastformsStatus"/>
-                        </el-form-item>
-                      </div>
-                    </el-row>
-                  </div>
-
-                  <el-row>
-                    <div style="width: 200px;margin: 0 auto;">
-                      <el-button size="small" @click="fastformsPublish" :disabled="!fastformsStatus">发布信息</el-button>
-                      <el-button size="small" @click="fastformsStopPublish">中止发布</el-button>
-                    </div>
-                  </el-row>
-                </el-col>
-                <el-col :span="17">
-                  <el-scrollbar style="height:630px;padding-left: 20px;">
-                    <div style="width: 100%;height: 620px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;">
-                      <el-row>
-                        <el-col :span="8" style="height: 620px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
-                          <el-row style="margin-bottom: 10px;">
-                            <!-- 设备：cnc_100 -->
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="device_id" prop="device_id1" label-width="70px" >
-                                <el-input v-model="fastforms.device_id1" placeholder="请输入device_id" style="width: 130px;" :disabled="!fastformsStatus"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="data_id" prop="data_id1" label-width="70px" >
-                                <el-input v-model="fastforms.data_id1" placeholder="请输入data_id" style="width: 130px;" :disabled="!fastformsStatus"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="value固定值:" prop="value1" label-width="110px" >
-                                <el-input v-model="fastforms.value1" placeholder="请输入固定值" style="width: 90px;" :disabled="!fastformsStatus" />
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="unit" prop="unit1" label-width="70px" >
-                                <el-input v-model="fastforms.unit1" placeholder="请输入unit" style="width: 130px;"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <!-- <el-row>
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="timestamp" prop="timestamp1" label-width="90px" >
-                                <el-input v-model="fastforms.timestamp1" placeholder="请输入timestamp" style="width: 110px;" readonly/>
-                              </el-form-item>
-                            </div>
-                          </el-row> -->
-
-                          <el-row v-if="!this.fastforms.value1">
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="value最小值:" prop="min1" label-width="110px" >
-                                <el-input v-model="fastforms.min1" placeholder="请输入最小值" style="width: 90px;" :disabled="!fastformsStatus"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                          <el-row v-if="!this.fastforms.value1">
-                            <div style="width: 200px;margin: 0 auto;">
-                              <el-form-item label="value最大值:" prop="max1" label-width="110px" >
-                                <el-input v-model="fastforms.max1" placeholder="请输入最大值" style="width: 90px;" :disabled="!fastformsStatus"/>
-                              </el-form-item>
-                            </div>
-                          </el-row>
-                        </el-col>
-                        <el-col :span="16">
-                          <el-scrollbar style="height:610px;word-wrap: break-word;">
-                            <el-row style="margin-bottom: 10px;">
-                              发布状态：
-                              <span v-html="fastforms.status1"></span>
-                            </el-row>
-                          </el-scrollbar>
-                        </el-col>
-                      </el-row>
-                    </div>
-                  </el-scrollbar>
-                </el-col>
-              </el-row>
-            </el-form>
-
-          </el-tab-pane>
         </el-tabs>
       </el-row>
     </div>
@@ -499,7 +292,7 @@ export default {
   name: 'HelloWorld',
   data(){
     return {
-      activeName: 'third',
+      activeName: 'second',
 
       form:{
         tenant_id: 1,
@@ -564,22 +357,33 @@ export default {
       singleStatus: "未发送",
       singleTimer: null,
 
+      // formsArray:[
+      //   {
+      //     tenant_id: 1,
+      //     device_id: "cnc_100",
+      //     "data_id": "temperature",
+      //     "data_value": 20,
+      //     "unit": "F",
+      //     "timestamp": 1679886000,
+      //     min:"0",
+      //     max:"100",
+      //     status:"未发布"
+      //   },
+      // ],
       forms: {
-        num : "1",
         freqNum: "1",
         loop: "1",
         frequency:2,
         interval: 5,
 
         tenant_id: 1,
-        "timestamp": moment().unix(),
+        "timestamp": 1679886000,
 
-        "device_id1": "cnc_100",
+        device_id1: "cnc_100",
         "data_id1": "state",
         "data_value1": 20,
-        "value1": null,
         "unit1": "-",
-        "timestamp1": moment().unix(),
+        "timestamp1": 1679886000,
         min1:"10",
         max1:"20",
         status1:"未发布",
@@ -587,9 +391,8 @@ export default {
         "device_id2": "cnc_101",
         "data_id2": "temperature",
         "data_value2": 20,
-        "value2": null,
         "unit2": "F",
-        "timestamp2": moment().unix(),
+        "timestamp2": 1679886000,
         min2:"0",
         max2:"100",
         status2:"未发布",
@@ -597,10 +400,8 @@ export default {
       formsStatus:true,
       formCommonSome:false,
       fromsFrequencyShow: true,
-      formsRules:{
-        tenant_id: [
-          {required: true, message: "tenant_id不能为空", trigger: "blur"}
-        ],
+      fromsStatus: "未发送",
+      fromsRules:{
         frequency: [  
           { required: true, message: '请输入次数', trigger: 'blur' },  
           { type: 'number', message: '次数必须是一个数字', trigger: ['blur', 'change'] },  
@@ -611,21 +412,14 @@ export default {
           { type: 'number', message: '时间间隔必须是一个数字', trigger: ['blur', 'change'] },  
           { validator: this.validateFrequency, trigger: 'blur' }  
         ],
-        device_id1: [
-          {required: true, message: "device_id不能为空", trigger: "blur"}
-        ],
         data_id1: [
-          {required: true, message: "data_id不能为空", trigger: "blur"}
-        ],
-        value1: [  
-          { message: '请输入固定值', trigger: 'blur' },  
-          { validator: this.validateValue, trigger: ['blur', 'change'] } 
+          {required: true, message: "device_id不能为空", trigger: "blur"}
         ],
         unit1: [
           {required: true, message: "unit不能为空", trigger: "blur"}
         ],
         timestamp1: [
-          {required: true, message: "timestamp不能为空", trigger: "blur"}
+          {required: true, message: "unit不能为空", trigger: "blur"}
         ],
         min1: [  
           { required: true, message: '请输入最小值', trigger: 'blur' },  
@@ -636,21 +430,14 @@ export default {
           { validator: this.validateNumber, trigger: ['blur', 'change'] } 
         ],
 
-        device_id2: [
-          {required: true, message: "device_id不能为空", trigger: "blur"}
-        ],
         data_id2: [
-          {required: true, message: "data_id不能为空", trigger: "blur"}
-        ],
-        value2: [  
-          { message: '请输入固定值', trigger: 'blur' },  
-          { validator: this.validateValue, trigger: ['blur', 'change'] } 
+          {required: true, message: "device_id不能为空", trigger: "blur"}
         ],
         unit2: [
           {required: true, message: "unit不能为空", trigger: "blur"}
         ],
         timestamp2: [
-          {required: true, message: "timestamp不能为空", trigger: "blur"}
+          {required: true, message: "unit不能为空", trigger: "blur"}
         ],
         min2: [  
           { required: true, message: '请输入最小值', trigger: 'blur' },  
@@ -671,65 +458,6 @@ export default {
         // ],
       },
       formsTimer: null,
-
-      fastforms: {
-        interval: 5,
-
-        tenant_id: 1,
-        start: null,
-        "timestamp1": null,
-        end: null,
-        "timestamp2": null,
-
-        "device_id1": "cnc_100",
-        "data_id1": "state",
-        "data_value1": 20,
-        "value1": null,
-        "unit1": "-",
-        min1:"10",
-        max1:"20",
-        status1:"未发布",
-      },
-      fastformsStatus:true,
-      fastformsRules:{
-        tenant_id: [
-          {required: true, message: "tenant_id不能为空", trigger: "blur"}
-        ],
-        start: [
-          {required: true, message: "起始时间不能为空", trigger: "blur"}
-        ],
-        interval: [  
-          { required: true, message: '请输入时间间隔', trigger: 'blur' },  
-          { type: 'number', message: '时间间隔必须是一个数字', trigger: ['blur', 'change'] },  
-          { validator: this.validateFrequency, trigger: 'blur' }  
-        ],
-        device_id1: [
-          {required: true, message: "device_id不能为空", trigger: "blur"}
-        ],
-        data_id1: [
-          {required: true, message: "data_id不能为空", trigger: "blur"}
-        ],
-        value1: [  
-          { message: '请输入固定值', trigger: 'blur' },  
-          { validator: this.validateValue, trigger: ['blur', 'change'] } 
-        ],
-        unit1: [
-          {required: true, message: "unit不能为空", trigger: "blur"}
-        ],
-        // start: [
-        //   {required: true, message: "起始时间不能为空", trigger: "blur"}
-        // ],
-        min1: [  
-          { required: true, message: '请输入最小值', trigger: 'blur' },  
-          { validator: this.validateNumber, trigger: ['blur', 'change'] } 
-        ],
-        max1: [  
-          { required: true, message: '请输入最大值', trigger: 'blur' },
-          { validator: this.validateNumber, trigger: ['blur', 'change'] } 
-        ],
-
-      },
-      fastformsTimer: null,
     }
   },
   created() { 
@@ -843,12 +571,16 @@ export default {
         this.forms.interval = 5;
       
         this.formCommonSome = false;
+        // this.fromsStatus = "未发送";
+        this.resetFormsStatus();
       }else{
         this.forms.loop = "1";
         this.forms.frequency = 2;
         this.forms.interval = 5;
    
         this.formCommonSome = true;
+        // this.fromsStatus = "未发送";
+        this.resetFormsStatus();
       }
     },
     'forms.loop'(newVal, oldVal) {
@@ -856,27 +588,18 @@ export default {
         this.forms.frequency = 2;
         this.forms.interval = 5;
         this.fromsFrequencyShow = true;
+        // this.fromsStatus = "未发送";
+        this.resetFormsStatus();
       }else{
         this.forms.frequency = 1;
         this.forms.interval = 5;
         this.fromsFrequencyShow = false;
+        // this.fromsStatus = "未发送";
+        this.resetFormsStatus();
 
       }
     },
-    'fastforms.start'(newVal, oldVal) {
-      if(this.fastforms.start){
-        this.fastforms.timestamp1 = moment(this.fastforms.start).unix()
-      }else{
-        this.fastforms.timestamp1 = null;
-      }
-    },
-    'fastforms.end'(newVal, oldVal) {
-      if(this.fastforms.end){
-        this.fastforms.timestamp2 = moment(this.fastforms.end).unix()
-      }else{
-        this.fastforms.timestamp2 = null;
-      }
-    }
+    
   },
   destroyed(){
     //断开mqtt
@@ -888,13 +611,11 @@ export default {
     },
     beforeLeave(activeName,oldActiveName){
       var p = new Promise((resolve, reject) => {
-        if(this.creatMsgStatus&&this.formsStatus){
+        if(this.creatMsgStatus){
           if(oldActiveName=="first"){
             this.firstReset();
           }else if (oldActiveName=="second"){
             this.secondReset();
-          }else if (oldActiveName=="third"){
-            this.thirdReset();
           }
           resolve();
         }else{
@@ -929,19 +650,6 @@ export default {
       } else {  
         callback();  
       }  
-    }, 
-    //验证固定值
-    validateValue(rule, value, callback) {  
-      if (!value) {  
-        callback();  
-      }  else{
-        if (!/^[-+]?(\d+(\.\d{1,2})?)$/.test(value)) {  
-          callback(new Error('数值必须是整数或小数（最多两位小数）'));  
-        } else {  
-          callback();  
-        }  
-      }
-
     }, 
     //验证次数
     validateFrequency(rule, value, callback) {  
@@ -1264,34 +972,10 @@ export default {
         // stopTime: null,
       }
     },
-    changeFormsNum(num){
-      var type = num;
-      this.secondReset();
-      if(type==1){
-        this.forms.num = "1"
-      }else{
-        this.forms.num = "2"
-      }
-    },
     formsPublish1(){
-  
       let that = this;
       this.$refs["forms"].validate(valid => {
         if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          if(!(parseFloat(this.forms.min2)<parseFloat(this.forms.max2))){
-            this.$alert(`${this.forms.device_id2}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
           try{
             this.formsStatus = false;
             var topic1 = `moe/${this.forms.tenant_id}/cnc/${this.forms.device_id1}/data/general`;
@@ -1299,69 +983,38 @@ export default {
             console.log("topic1:"+topic1)
             console.log("topic2:"+topic2)
             // topic = "client/dev/report"
-
-
+            //生成随机数
+            let minValue1 = parseFloat(this.forms.min1);  
+            let maxValue1= parseFloat(this.forms.max1); 
+            let range1 = maxValue1 - minValue1; 
+            let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
+            //生成随机数
+            let minValue2 = parseFloat(this.forms.min2);  
+            let maxValue2= parseFloat(this.forms.max2); 
+            let range2 = maxValue2 - minValue2; 
+            let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
             var qos = 1
             var n1 = false;
             var n2 = false;
-       
-            var params1 = {};
-            if(this.forms.value1){
-              params1 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id1,
-                "data_id": this.forms.data_id1,
+            var params1 = {
+              "tenant_id": this.forms.tenant_id,
+              "device_id": this.forms.device_id1,
+              "data_id": this.forms.data_id1,
 
-                "data_value": this.forms.value1,
+              "data_value": randomValue1,
 
-                "unit": this.forms.unit1,
-                "timestamp": moment().unix()
-              }
-            }else{
-              //生成随机数
-              let minValue1 = parseFloat(this.forms.min1);  
-              let maxValue1= parseFloat(this.forms.max1); 
-              let range1 = maxValue1 - minValue1; 
-              let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-              params1 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id1,
-                "data_id": this.forms.data_id1,
-
-                "data_value": randomValue1,
-
-                "unit": this.forms.unit1,
-                "timestamp": moment().unix()
-              }
+              "unit": this.forms.unit1,
+              "timestamp": this.forms.timestamp
             }
-            var params2 = {};
-            if(this.forms.value2){
-              params2 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id2,
-                "data_id": this.forms.data_id2,
+            var params2 = {
+              "tenant_id": this.forms.tenant_id,
+              "device_id": this.forms.device_id2,
+              "data_id": this.forms.data_id2,
 
-                "data_value": this.forms.value2,
+              "data_value": randomValue2,
 
-                "unit": this.forms.unit2,
-                "timestamp": moment().unix()
-              }
-            }else{
-              //生成随机数
-              let minValue2 = parseFloat(this.forms.min2);  
-              let maxValue2= parseFloat(this.forms.max2); 
-              let range2 = maxValue2 - minValue2; 
-              let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
-              params2 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id2,
-                "data_id": this.forms.data_id2,
-
-                "data_value": randomValue2,
-
-                "unit": this.forms.unit2,
-                "timestamp": moment().unix()
-              }
+              "unit": this.forms.unit2,
+              "timestamp": this.forms.timestamp
             }
             var callBack1 = ()=>{
               n1 = true;
@@ -1394,8 +1047,7 @@ export default {
 
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            this.singleStatus = "error:" + error
           }
         }
       });
@@ -1404,20 +1056,6 @@ export default {
       let that = this;
       this.$refs["forms"].validate(valid => {
         if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          if(!(parseFloat(this.forms.min2)<parseFloat(this.forms.max2))){
-            this.$alert(`${this.forms.device_id2}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
           try{
             if (this.formsTimer !== null) {  
               // 如果定时器已经启动，先取消它  
@@ -1461,64 +1099,36 @@ export default {
               }
             }
             function sendMsg(){
-              var params1 = {};
-              if(that.forms.value1){
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
+              //生成随机数
+              let minValue1 = parseFloat(that.forms.min1);  
+              let maxValue1= parseFloat(that.forms.max1); 
+              let range1 = maxValue1 - minValue1; 
+              let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
+              //生成随机数
+              let minValue2 = parseFloat(that.forms.min2);  
+              let maxValue2= parseFloat(that.forms.max2); 
+              let range2 = maxValue2 - minValue2; 
+              let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
+              var params1 = {
+                "tenant_id": that.forms.tenant_id,
+                "device_id": that.forms.device_id1,
+                "data_id": that.forms.data_id1,
 
-                  "data_value": that.forms.value1,
+                "data_value": randomValue1,
 
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue1 = parseFloat(that.forms.min1);  
-                let maxValue1= parseFloat(that.forms.max1); 
-                let range1 = maxValue1 - minValue1; 
-                let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": randomValue1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
+                "unit": that.forms.unit1,
+                "timestamp": that.forms.timestamp
               }
               obj1 = params1;
-              var params2 = {};
-              if(that.forms.value2){
-                params2 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id2,
-                  "data_id": that.forms.data_id2,
+              var params2 = {
+                "tenant_id": that.forms.tenant_id,
+                "device_id": that.forms.device_id2,
+                "data_id": that.forms.data_id2,
 
-                  "data_value": that.forms.value2,
+                "data_value": randomValue2,
 
-                  "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue2 = parseFloat(that.forms.min2);  
-                let maxValue2= parseFloat(that.forms.max2); 
-                let range2 = maxValue2 - minValue2; 
-                let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
-                params2 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id2,
-                  "data_id": that.forms.data_id2,
-
-                  "data_value": randomValue2,
-
-                  "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
-                }
+                "unit": that.forms.unit2,
+                "timestamp": that.forms.timestamp
               }
               obj2 = params2;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
@@ -1549,8 +1159,7 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            this.singleStatus = "error:" + error
           }
         }
       });
@@ -1559,20 +1168,6 @@ export default {
       let that = this;
       this.$refs["forms"].validate(valid => {
         if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          if(!(parseFloat(this.forms.min2)<parseFloat(this.forms.max2))){
-            this.$alert(`${this.forms.device_id2}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
           try{
             if (this.formsTimer !== null) {  
               // 如果定时器已经启动，先取消它  
@@ -1616,64 +1211,36 @@ export default {
               }
             }
             function sendMsg(){
-              var params1 = {};
-              if(that.forms.value1){
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
+              //生成随机数
+              let minValue1 = parseFloat(that.forms.min1);  
+              let maxValue1= parseFloat(that.forms.max1); 
+              let range1 = maxValue1 - minValue1; 
+              let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
+              //生成随机数
+              let minValue2 = parseFloat(that.forms.min2);  
+              let maxValue2= parseFloat(that.forms.max2); 
+              let range2 = maxValue2 - minValue2; 
+              let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
+              var params1 = {
+                "tenant_id": that.forms.tenant_id,
+                "device_id": that.forms.device_id1,
+                "data_id": that.forms.data_id1,
 
-                  "data_value": that.forms.value1,
+                "data_value": randomValue1,
 
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue1 = parseFloat(that.forms.min1);  
-                let maxValue1= parseFloat(that.forms.max1); 
-                let range1 = maxValue1 - minValue1; 
-                let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": randomValue1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
+                "unit": that.forms.unit1,
+                "timestamp": that.forms.timestamp
               }
               obj1 = params1;
-              var params2 = {};
-              if(that.forms.value2){
-                params2 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id2,
-                  "data_id": that.forms.data_id2,
+              var params2 = {
+                "tenant_id": that.forms.tenant_id,
+                "device_id": that.forms.device_id2,
+                "data_id": that.forms.data_id2,
 
-                  "data_value": that.forms.value2,
+                "data_value": randomValue2,
 
-                  "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue2 = parseFloat(that.forms.min2);  
-                let maxValue2= parseFloat(that.forms.max2); 
-                let range2 = maxValue2 - minValue2; 
-                let randomValue2 = Math.round((Math.random() * range2 + minValue2) * 100) / 100;
-                params2 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id2,
-                  "data_id": that.forms.data_id2,
-
-                  "data_value": randomValue2,
-
-                  "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
-                }
+                "unit": that.forms.unit2,
+                "timestamp": that.forms.timestamp
               }
               obj2 = params2;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
@@ -1704,291 +1271,21 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
-          }
-        }
-      });
-    },
-    formsSinglePublish1(){
-      let that = this;
-      this.$refs["forms"].validate(valid => {
-        if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          try{
-            this.formsStatus = false;
-            var topic1 = `moe/${this.forms.tenant_id}/cnc/${this.forms.device_id1}/data/general`;
-            console.log("topic1:"+topic1)
-            // topic = "client/dev/report"
-            var params1 = {};
-            if(this.forms.value1){
-              params1 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id1,
-                "data_id": this.forms.data_id1,
-
-                "data_value": this.forms.value1,
-
-                "unit": this.forms.unit1,
-                "timestamp": moment().unix()
-              }
-            }else{
-              //生成随机数
-              let minValue1 = parseFloat(this.forms.min1);  
-              let maxValue1= parseFloat(this.forms.max1); 
-              let range1 = maxValue1 - minValue1; 
-              let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-              params1 = {
-                "tenant_id": this.forms.tenant_id,
-                "device_id": this.forms.device_id1,
-                "data_id": this.forms.data_id1,
-
-                "data_value": randomValue1,
-
-                "unit": this.forms.unit1,
-                "timestamp": moment().unix()
-              }
-            }
-
-
-            var qos = 1
-            var n1 = false;
-            var callBack1 = ()=>{
-              n1 = true;
-              // this.singleStatus = "<br>" + "发送成功:" + that.forms.message
-              that.forms.status1 = "<br>" + "发送成功:" + "<br>" +JSON.stringify(params1)
-              that.formsStatus = true;
-              
-            }
-            that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
-              if (error) {
-                this.forms.status1 = "error:" + error
-              }
-            }); 
-
-          }
-          catch(error){
-            this.forms.status1 = "error:" + error
-          }
-        }
-      });
-    },
-    formsSinglePublish2(){
-      let that = this;
-      this.$refs["forms"].validate(valid => {
-        if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          try{
-            if (this.formsTimer !== null) {  
-              // 如果定时器已经启动，先取消它  
-              clearTimeout(this.formsTimer);  
-            }  
-            this.formsStatus = false;
-            var n = 0;
-            that.forms.status1 = "";
-            var topic1 = `moe/${that.forms.tenant_id}/cnc/${that.forms.device_id1}/data/general`;
-            var qos = 1
-            var num = 0;
-            var obj1 = {};
-            var callBack1 = ()=>{
-              num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
-              if(n<that.forms.frequency&&(!this.formsStatus)){
-                this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
-              }else{
-                this.forms.status1 += "<br>" + "发送完毕"
-                this.formsStatus = true;
-              }
-            }
-            function sendMsg(){
-              var params1 = {};
-              if(that.forms.value1){
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": that.forms.value1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue1 = parseFloat(that.forms.min1);  
-                let maxValue1= parseFloat(that.forms.max1); 
-                let range1 = maxValue1 - minValue1; 
-                let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": randomValue1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }
-              obj1 = params1;
-              that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
-                if (error) {
-                  that.forms.status1 = "error:" + error
-                }
-              }); 
-            }
-            function pubilcMsg(){
-              if(n>0){
-                that.forms.timestamp1 += that.form.interval*1000;
-              }
-              n++;
-              // if(that.form.randomValue=="1"){
-              //   sendMsg();
-              // }else if(that.form.randomValue=="2"){
-              //   that.creatMsg(sendMsg,n);
-              // }
-              sendMsg();
-
-            }
-            pubilcMsg();
-          }
-          catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
-          }
-        }
-      });
-    },
-    formsSinglePublish3(){
-      let that = this;
-      this.$refs["forms"].validate(valid => {
-        if (valid) {
-          if(!(parseFloat(this.forms.min1)<parseFloat(this.forms.max1))){
-            this.$alert(`${this.forms.device_id1}的最小值必须小于最大值`, '提示', {
-              confirmButtonText: '确定',
-              callback: action => {}
-            });
-            return;
-          }
-          try{
-            if (this.formsTimer !== null) {  
-              // 如果定时器已经启动，先取消它  
-              clearTimeout(this.formsTimer);  
-            }  
-            this.formsStatus = false;
-            var n = 0;
-            that.forms.status1 = "";
-            var topic1 = `moe/${that.forms.tenant_id}/cnc/${that.forms.device_id1}/data/general`;
-            var qos = 1
-            var num = 0;
-            var obj1 = {};
-            var callBack1 = ()=>{
-              num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
-              if(!this.formsStatus){
-                this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
-              }else{
-                this.forms.status1 += "<br>" + "发送完毕"
-                this.formsStatus = true;
-              }
-            }
-            function sendMsg(){
-              var params1 = {};
-              if(that.forms.value1){
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": that.forms.value1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }else{
-                //生成随机数
-                let minValue1 = parseFloat(that.forms.min1);  
-                let maxValue1= parseFloat(that.forms.max1); 
-                let range1 = maxValue1 - minValue1; 
-                let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-                params1 = {
-                  "tenant_id": that.forms.tenant_id,
-                  "device_id": that.forms.device_id1,
-                  "data_id": that.forms.data_id1,
-
-                  "data_value": randomValue1,
-
-                  "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
-                }
-              }
-              obj1 = params1;
-              that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
-                if (error) {
-                  that.forms.status1 = "error:" + error
-                }
-              }); 
-            }
-            function pubilcMsg(){
-              if(n>0){
-                that.forms.timestamp1 += that.form.interval*1000;
-              }
-              n++;
-              // if(that.form.randomValue=="1"){
-              //   sendMsg();
-              // }else if(that.form.randomValue=="2"){
-              //   that.creatMsg(sendMsg,n);
-              // }
-              sendMsg();
-
-            }
-            pubilcMsg();
-          }
-          catch(error){
-            this.forms.status1 = "error:" + error
+            this.singleStatus = "error:" + error
           }
         }
       });
     },
     formsPublish(){
-      //单设备
-      if(this.forms.num=="1"){
-        //单独发送
-        if(this.forms.freqNum=="1"){
-          this.formsSinglePublish1();
+      //单独发送
+      if(this.forms.freqNum=="1"){
+        this.formsPublish1();
+      }else{
+        //多次有限循环
+        if(this.forms.loop=="1"){
+          this.formsPublish2();
         }else{
-          //多次有限循环
-          if(this.forms.loop=="1"){
-            this.formsSinglePublish2();
-          }else{
-            this.formsSinglePublish3();
-          }
-        }
-      }
-      //多设备
-      else{
-        //单独发送
-        if(this.forms.freqNum=="1"){
-          this.formsPublish1();
-        }else{
-          //多次有限循环
-          if(this.forms.loop=="1"){
-            this.formsPublish2();
-          }else{
-            this.formsPublish3();
-          }
+          this.formsPublish3();
         }
       }
     },
@@ -2007,21 +1304,18 @@ export default {
     },
     secondReset(){
       this.formsStopPublish();
-      this.$refs.forms.resetFields();
       this.forms =  {
-        num: "1",
         freqNum: "1",
         loop: "1",
         frequency:2,
         interval: 5,
 
         tenant_id: 1,
-        "timestamp": moment().unix(),
+        "timestamp": 1679886000,
 
         device_id1: "cnc_100",
         "data_id1": "state",
         "data_value1": 20,
-        "value1": null,
         "unit1": "-",
         min1:"10",
         max1:"20",
@@ -2030,7 +1324,6 @@ export default {
         device_id2: "cnc_101",
         "data_id2": "temperature",
         "data_value2": 20,
-        "value2": null,
         "unit2": "F",
         min2:"0",
         max2:"100",
@@ -2040,127 +1333,10 @@ export default {
     // creatEquipment(){
     //   console.log(1)
     // },
-    fastformsPublish(){
-      let that = this;
-      this.$refs["fastforms"].validate(valid => {
-        if (valid) {
-          try{
-            if (this.fastformsTimer !== null) {  
-              // 如果定时器已经启动，先取消它  
-              clearTimeout(this.fastformsTimer);  
-            }  
-            this.fastformsStatus = false;
-            var result = {}
-            var callBack = ()=>{
-          
-              this.fastforms.status1 += "<br>" + `第${n+1}次发送成功:` + JSON.stringify(result);
-              if(!this.fastformsStatus&&loopBealoon){
-                this.fastformsTimer = setTimeout(pubilcMsg,0)
-              }else if(!this.fastformsStatus&&(!loopBealoon)){
-                this.fastforms.status1 += "<br>" + "已到时间，发送完毕"
-                this.fastformsStatus = true;
-              }else{
-                this.fastforms.status1 += "<br>" + "发送完毕"
-                this.fastformsStatus = true;
-              }
-            }
-            var n = 0;
-            var loopBealoon = true;
-            that.fastforms.status1 = "";
-            var topic = `moe/${that.fastforms.tenant_id}/cnc/${that.fastforms.device_id}/data/general`;
-            var qos = 1
-            function pubilcMsg(){
-              var num = that.fastforms.timestamp1 + that.fastforms.interval*n
-              if(that.fastforms.end){
-                if(num>moment(that.fastforms.end).unix()){
-                  loopBealoon = false;
-                  that.fastforms.status1 += "<br>" + "已到时间，发送完毕"
-                  that.fastformsStatus = true;
-                  return;
-                }else{
-                  loopBealoon = true;
-                }
-              }else{
-                loopBealoon = true;
-              }
-              var obj = {}
-              if(that.fastforms.value1){
-                obj = {
-                  "tenant_id": that.fastforms.tenant_id,
-                  "device_id": that.fastforms.device_id1,
-                  "data_id": that.fastforms.data_id1,
+    resetFormsStatus(){
 
-                  "data_value": that.fastforms.value1,
-
-                  "unit": that.fastforms.unit1,
-                  "timestamp": num
-                };
-              }else{
-                //生成随机数
-                // console.log(that.fastforms.min1)
-                let minValue1 = parseFloat(that.fastforms.min1);  
-                let maxValue1= parseFloat(that.fastforms.max1); 
-                let range1 = maxValue1 - minValue1; 
-                let randomValue1 = Math.round((Math.random() * range1 + minValue1) * 100) / 100;
-                obj = {
-                  "tenant_id": that.fastforms.tenant_id,
-                  "device_id": that.fastforms.device_id1,
-                  "data_id": that.fastforms.data_id1,
-
-                  "data_value": randomValue1,
-
-                  "unit": that.fastforms.unit1,
-                  "timestamp": num
-                };
-              }
-              result = obj;
-              that.$mqtt.publish(topic,obj,{qos:qos},callBack, (error) => {
-                if (error) {
-                  this.fastforms.status1 = "error:" + error
-                }
-              }); 
-              n++;
-
-            }
-            pubilcMsg();
-          }
-          catch(error){
-            this.fastforms.status1 = "error:" + error
-          }
-        }
-
-      })
     },
-    fastformsStopPublish(){
-      if (this.fastformsTimer !== null) {  
-        clearTimeout(this.fastformsTimer);  
-        this.fastformsTimer = null; // 清除定时器ID，防止重复清除  
-        this.fastforms.status1 += "<br>" + "中止发送"
-        this.fastformsStatus = true;
-      } 
-    },
-    thirdReset(){
-      this.fastformsStopPublish();
-      this.$refs.fastforms.resetFields();
-      this.fastforms = {
-        interval: 5,
 
-        tenant_id: 1,
-        start: null,
-        "timestamp1": null,
-        end: null,
-        "timestamp2": null,
-
-        "device_id1": "cnc_100",
-        "data_id1": "state",
-        "data_value1": 20,
-        "value1": null,
-        "unit1": "-",
-        min1:"10",
-        max1:"20",
-        status1:"未发布",
-      }
-    }
   }
 }
 </script>
