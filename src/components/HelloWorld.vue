@@ -485,6 +485,9 @@
             </el-form>
 
           </el-tab-pane>
+          <el-tab-pane label="模拟服务器传送数据" name="fourth">
+            <el-button @click="fourthSend">发送</el-button>
+          </el-tab-pane>  
         </el-tabs>
       </el-row>
     </div>
@@ -495,6 +498,7 @@
 
 <script>
 import moment from'moment';
+import { test } from "@/api/test";
 export default {
   name: 'HelloWorld',
   data(){
@@ -2045,6 +2049,13 @@ export default {
       this.$refs["fastforms"].validate(valid => {
         if (valid) {
           try{
+            if(moment(that.fastforms.start).unix()>moment(that.fastforms.end).unix()){
+              this.$alert('起始时间必须早于中止时间', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {}
+              });
+              return;
+            }
             if (this.fastformsTimer !== null) {  
               // 如果定时器已经启动，先取消它  
               clearTimeout(this.fastformsTimer);  
@@ -2160,7 +2171,13 @@ export default {
         max1:"20",
         status1:"未发布",
       }
+    },
+    fourthSend(){
+      test().then(response=>{
+          console.log(response)
+      })
     }
+
   }
 }
 </script>
