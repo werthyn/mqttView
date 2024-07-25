@@ -1,7 +1,21 @@
 <template>
   <div class="hello">
-    <el-row style="margin-bottom: 10px;font-size: 25px; font-weight: 800;letter-spacing: 3px;">
+    <el-row style="margin-bottom: 10px;font-size: 25px; font-weight: 800;letter-spacing: 3px; position: relative;text-align: left;padding-left: 20px;">
       模拟数据采集盒子
+      <!-- <div style="position: absolute;right: 20px;top: 0;font-size: 15px; font-weight: 400;">
+        <el-form ref="allform" :model="allform" :rules="allformrules" label-width="105px" style="display: flex;flex-direction: row; align-items: center;">
+          <el-form-item label="username:" style="margin-right: 10px;" prop="username">
+            <el-input v-model="allform.username" placeholder="请输入username" style="width: 120px;" :disabled="!allstatus"/>
+          </el-form-item>
+          <el-form-item label="password:" style="margin-right: 10px;" prop="password">
+            <el-input v-model="allform.password" placeholder="请输入password" style="width: 120px;" :disabled="!allstatus"/>
+          </el-form-item>
+          <el-form-item label="url:" style="margin-right: 10px;" prop="url" label-width="45px">
+            <el-input v-model="allform.url" placeholder="请输入url" style="width: 240px;" :disabled="!allstatus"/>
+          </el-form-item>
+          <el-button style="position: relative;top: -11px;">连接</el-button>
+        </el-form>
+      </div> -->
     </el-row>
     <div style="height: 700px;box-sizing: border-box;border: 1px solid #ccc;margin: 10px 20px;padding: 10px 20px;">
       <el-row>
@@ -182,7 +196,7 @@
                   </el-row>
                 </el-col>
                 <el-col :span="19">
-                  <el-scrollbar style="height:630px;padding-left: 20px;">
+                  <el-scrollbar style="height:630px;padding-left: 20px;" ref="singleScrollbar">
                     <div style="width: 100%;height: 380px;margin-bottom: 10px;box-sizing: border-box;border: 1px solid #ccc ;">
                       <el-row>
                         <el-col :span="6" style="height: 380px;box-sizing: border-box;border-right: 1px solid #ccc ;padding-top: 5px;">
@@ -503,6 +517,25 @@ export default {
   name: 'HelloWorld',
   data(){
     return {
+      url: "",
+      allform:{
+        username: "admin",
+        password: "a57754708",
+        url: "ws://192.168.1.119:8083/mqtt",
+      },
+      allformrules:{
+        username: [
+          {required: true, message: "username不能为空", trigger: "blur"}
+        ],
+        password: [
+          {required: true, message: "password不能为空", trigger: "blur"}
+        ],
+        url: [
+          {required: true, message: "url不能为空", trigger: "blur"}
+        ],
+      },
+      allstatus: true,
+
       activeName: 'second',
 
       form:{
@@ -576,14 +609,14 @@ export default {
         interval: 5,
 
         tenant_id: 1,
-        "timestamp": moment().unix(),
+        "timestamp": moment().unix()*1000,
 
         "device_id1": "cnc_100",
         "data_id1": "state",
         "data_value1": 20,
         "value1": null,
         "unit1": "-",
-        "timestamp1": moment().unix(),
+        "timestamp1": moment().unix()*1000,
         min1:"10",
         max1:"20",
         status1:"未发布",
@@ -593,7 +626,7 @@ export default {
         "data_value2": 20,
         "value2": null,
         "unit2": "F",
-        "timestamp2": moment().unix(),
+        "timestamp2": moment().unix()*1000,
         min2:"0",
         max2:"100",
         status2:"未发布",
@@ -675,6 +708,8 @@ export default {
         // ],
       },
       formsTimer: null,
+      formsSinglePublish2statusArray1:[],
+      formsSinglePublish2statusArray2:[],
 
       fastforms: {
         interval: 5,
@@ -734,14 +769,13 @@ export default {
 
       },
       fastformsTimer: null,
+      fastformsPublish2statusArray1:[],
     }
   },
   created() { 
     this.form.topic = this.computedTopic; 
   },
   mounted(){
-    // console.log(moment("2024-07-11 15:16:26").unix())
-    // console.log(moment("2024-07-11 15:16:26").unix()-6000)
     this.$mqtt.startMqtt().then(res=>{
       if(res){
         // //订阅频道
@@ -869,14 +903,14 @@ export default {
     },
     'fastforms.start'(newVal, oldVal) {
       if(this.fastforms.start){
-        this.fastforms.timestamp1 = moment(this.fastforms.start).unix()
+        this.fastforms.timestamp1 = moment(this.fastforms.start).unix()*1000
       }else{
         this.fastforms.timestamp1 = null;
       }
     },
     'fastforms.end'(newVal, oldVal) {
       if(this.fastforms.end){
-        this.fastforms.timestamp2 = moment(this.fastforms.end).unix()
+        this.fastforms.timestamp2 = moment(this.fastforms.end).unix()*1000
       }else{
         this.fastforms.timestamp2 = null;
       }
@@ -1195,7 +1229,7 @@ export default {
                 that.form.message = JSON.stringify(obj,null,2)
               }
               // if(that.form.stopTime){
-              //   if(JSON.parse(that.form.message).timestamp>moment(that.form.stopTime).unix()){
+              //   if(JSON.parse(that.form.message).timestamp>moment(that.form.stopTime).unix()*1000){
               //     loopBealoon = false;
               //   }else{
               //     loopBealoon = true;
@@ -1319,7 +1353,7 @@ export default {
                 "data_value": this.forms.value1,
 
                 "unit": this.forms.unit1,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }else{
               //生成随机数
@@ -1335,7 +1369,7 @@ export default {
                 "data_value": randomValue1,
 
                 "unit": this.forms.unit1,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }
             var params2 = {};
@@ -1348,7 +1382,7 @@ export default {
                 "data_value": this.forms.value2,
 
                 "unit": this.forms.unit2,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }else{
               //生成随机数
@@ -1364,7 +1398,7 @@ export default {
                 "data_value": randomValue2,
 
                 "unit": this.forms.unit2,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }
             var callBack1 = ()=>{
@@ -1387,19 +1421,31 @@ export default {
             }
             that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
               if (error) {
-                this.forms.status1 = "error:" + error
+                // this.forms.status1 = "error:" + error
+                var endWord = "error:" + error
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
               }
             }); 
             that.$mqtt.publish(topic2, params2,{qos:qos},callBack2, (error) => {
               if (error) {
-                this.forms.status2 = "error:" + error
+                // this.forms.status2 = "error:" + error
+                var endWord = "error:" + error
+                this.formsSinglePublish2statusArray2.push(endWord);
+                this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
               }
             }); 
 
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            // this.forms.status1 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray1.push(endWord);
+            this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+            // this.forms.status2 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray2.push(endWord);
+            this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
           }
         }
       });
@@ -1437,30 +1483,42 @@ export default {
             var num = 0;
             var obj1 = {};
             var obj2 = {};
+            this.formsSinglePublish2statusArray1 = [];
             var callBack1 = ()=>{
               num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              // this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1);
+              this.formsSinglePublish2statusArray1.push(one)
+              this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
               if(n<that.forms.frequency&&(!this.formsStatus)){
                 if(num%2==0){
                   this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
                 }
               }else{
-                this.forms.status1 += "<br>" + "发送完毕"
+                // this.forms.status1 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
                 this.formsStatus = true;
               }
             }
+            this.formsSinglePublish2statusArray2 = [];
             var callBack2 = ()=>{
               num++;
-              this.forms.status2 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2)
-              console.log("n是：" + n)
-              console.log("that.forms.frequency是：" + that.forms.frequency)
-              console.log(typeof(that.forms.frequency))
+              // this.forms.status2 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2);
+              this.formsSinglePublish2statusArray2.push(one)
+              this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
+
               if(n<that.forms.frequency&&(!this.formsStatus)){
                 if(num%2==0){
                   this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
                 }
               }else{
-                this.forms.status2 += "<br>" + "发送完毕"
+                // this.forms.status2 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray2.push(endWord);
+                this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
                 this.formsStatus = true;
               }
             }
@@ -1475,7 +1533,7 @@ export default {
                   "data_value": that.forms.value1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1491,7 +1549,7 @@ export default {
                   "data_value": randomValue1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj1 = params1;
@@ -1505,7 +1563,7 @@ export default {
                   "data_value": that.forms.value2,
 
                   "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1521,18 +1579,24 @@ export default {
                   "data_value": randomValue2,
 
                   "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj2 = params2;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
                 if (error) {
-                  that.forms.status1 = "error:" + error
+                  // that.forms.status1 = "error:" + error
+                  var endWord = "error:" + error
+                  that.formsSinglePublish2statusArray1.push(endWord);
+                  that.forms.status1 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray1)).reverse().join('');
                 }
               }); 
               that.$mqtt.publish(topic2, params2,{qos:qos},callBack2, (error) => {
                 if (error) {
-                  that.forms.status2 = "error:" + error
+                  // that.forms.status2 = "error:" + error
+                  var endWord = "error:" + error
+                  that.formsSinglePublish2statusArray2.push(endWord);
+                  that.forms.status2 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray2)).reverse().join('');
                 }
               }); 
             }
@@ -1553,8 +1617,14 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            // this.forms.status1 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray1.push(endWord);
+            this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+            // this.forms.status2 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray2.push(endWord);
+            this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
           }
         }
       });
@@ -1592,30 +1662,43 @@ export default {
             var num = 0;
             var obj1 = {};
             var obj2 = {};
+            this.formsSinglePublish2statusArray1 = [];
             var callBack1 = ()=>{
               num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              // this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1);
+              this.formsSinglePublish2statusArray1.push(one)
+              this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+
               if(!this.formsStatus){
                 if(num%2==0){
                   this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
                 }
               }else{
-                this.forms.status1 += "<br>" + "发送完毕"
+                // this.forms.status1 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
                 this.formsStatus = true;
               }
             }
+            this.formsSinglePublish2statusArray2 = [];
             var callBack2 = ()=>{
               num++;
-              this.forms.status2 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2)
-              console.log("n是：" + n)
-              console.log("that.forms.frequency是：" + that.forms.frequency)
-              console.log(typeof(that.forms.frequency))
+              // this.forms.status2 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj2);
+              this.formsSinglePublish2statusArray2.push(one)
+              this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
+
               if(!this.formsStatus){
                 if(num%2==0){
                   this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
                 }
               }else{
-                this.forms.status2 += "<br>" + "发送完毕"
+                // this.forms.status2 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray2.push(endWord);
+                this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
                 this.formsStatus = true;
               }
             }
@@ -1630,7 +1713,7 @@ export default {
                   "data_value": that.forms.value1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1646,7 +1729,7 @@ export default {
                   "data_value": randomValue1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj1 = params1;
@@ -1660,7 +1743,7 @@ export default {
                   "data_value": that.forms.value2,
 
                   "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1676,18 +1759,24 @@ export default {
                   "data_value": randomValue2,
 
                   "unit": that.forms.unit2,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj2 = params2;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
                 if (error) {
-                  that.forms.status1 = "error:" + error
+                  // that.forms.status1 = "error:" + error
+                  var endWord = "error:" + error
+                  that.formsSinglePublish2statusArray1.push(endWord);
+                  that.forms.status1 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray1)).reverse().join('');
                 }
               }); 
               that.$mqtt.publish(topic2, params2,{qos:qos},callBack2, (error) => {
                 if (error) {
-                  that.forms.status2 = "error:" + error
+                  // that.forms.status2 = "error:" + error
+                  var endWord = "error:" + error
+                  that.formsSinglePublish2statusArray2.push(endWord);
+                  that.forms.status2 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray2)).reverse().join('');
                 }
               }); 
             }
@@ -1708,8 +1797,14 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            // this.forms.status1 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray1.push(endWord);
+            this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+            // this.forms.status2 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray2.push(endWord);
+            this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
           }
         }
       });
@@ -1740,7 +1835,7 @@ export default {
                 "data_value": this.forms.value1,
 
                 "unit": this.forms.unit1,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }else{
               //生成随机数
@@ -1756,7 +1851,7 @@ export default {
                 "data_value": randomValue1,
 
                 "unit": this.forms.unit1,
-                "timestamp": moment().unix()
+                "timestamp": moment().unix()*1000
               }
             }
 
@@ -1772,13 +1867,19 @@ export default {
             }
             that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
               if (error) {
-                this.forms.status1 = "error:" + error
+                // this.forms.status1 = "error:" + error
+                var endWord = "error:" + error
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
               }
             }); 
 
           }
           catch(error){
-            this.forms.status1 = "error:" + error
+            // this.forms.status1 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray1.push(endWord);
+            this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
           }
         }
       });
@@ -1806,14 +1907,22 @@ export default {
             var qos = 1
             var num = 0;
             var obj1 = {};
+            this.formsSinglePublish2statusArray1 = [];
             var callBack1 = ()=>{
               num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1);
+              this.formsSinglePublish2statusArray1.push(one)
+              // this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
               if(n<that.forms.frequency&&(!this.formsStatus)){
                 this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
               }else{
-                this.forms.status1 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+                // this.forms.status1 += "<br>" + "发送完毕"
                 this.formsStatus = true;
+
               }
             }
             function sendMsg(){
@@ -1827,7 +1936,7 @@ export default {
                   "data_value": that.forms.value1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1843,13 +1952,16 @@ export default {
                   "data_value": randomValue1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj1 = params1;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
                 if (error) {
-                  that.forms.status1 = "error:" + error
+                  // that.forms.status1 = "error:" + error
+                  var endWord = "error:" + error
+                  that.formsSinglePublish2statusArray1.push(endWord);
+                  that.forms.status1 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray1)).reverse().join('');
                 }
               }); 
             }
@@ -1869,8 +1981,14 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
-            this.forms.status2 = "error:" + error
+            // this.forms.status1 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray1.push(endWord);
+            this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+            // this.forms.status2 = "error:" + error
+            var endWord = "error:" + error
+            this.formsSinglePublish2statusArray2.push(endWord);
+            this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
           }
         }
       });
@@ -1898,13 +2016,20 @@ export default {
             var qos = 1
             var num = 0;
             var obj1 = {};
+            this.formsSinglePublish2statusArray1 = [];
             var callBack1 = ()=>{
               num++;
-              this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              // this.forms.status1 += "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1)
+              var one = "<br>" + `第${n}次发送成功:` +"<br>" +  JSON.stringify(obj1);
+              this.formsSinglePublish2statusArray1.push(one)
+              this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
               if(!this.formsStatus){
                 this.formsTimer = setTimeout(pubilcMsg,that.forms.interval*1000)
               }else{
-                this.forms.status1 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+                // this.forms.status1 += "<br>" + "发送完毕"
                 this.formsStatus = true;
               }
             }
@@ -1919,7 +2044,7 @@ export default {
                   "data_value": that.forms.value1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }else{
                 //生成随机数
@@ -1935,13 +2060,16 @@ export default {
                   "data_value": randomValue1,
 
                   "unit": that.forms.unit1,
-                  "timestamp": moment().unix()
+                  "timestamp": moment().unix()*1000
                 }
               }
               obj1 = params1;
               that.$mqtt.publish(topic1, params1,{qos:qos},callBack1, (error) => {
                 if (error) {
-                  that.forms.status1 = "error:" + error
+                  // that.forms.status1 = "error:" + error
+                    var endWord = "error:" + error
+                    that.formsSinglePublish2statusArray1.push(endWord);
+                    that.forms.status1 = JSON.parse(JSON.stringify(that.formsSinglePublish2statusArray1)).reverse().join('');
                 }
               }); 
             }
@@ -1961,7 +2089,10 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.forms.status1 = "error:" + error
+            // this.forms.status1 = "error:" + error
+                var endWord = "error:" + error
+                this.formsSinglePublish2statusArray1.push(endWord);
+                this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
           }
         }
       });
@@ -2002,9 +2133,13 @@ export default {
         if (this.formsTimer !== null) {  
           clearTimeout(this.formsTimer);  
           this.formsTimer = null; // 清除定时器ID，防止重复清除  
-          // this.singleStatus += "<br>" + "中止发送"
-          this.forms.status1 += "<br>" + "中止发送"
-          this.forms.status2 += "<br>" + "中止发送"
+          // this.forms.status1 += "<br>" + "中止发送"
+          var endWord = "<br>" + "中止发送";
+          this.formsSinglePublish2statusArray1.push(endWord);
+          this.forms.status1 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray1)).reverse().join('');
+          // this.forms.status2 += "<br>" + "中止发送"
+          this.formsSinglePublish2statusArray2.push(endWord);
+          this.forms.status2 = JSON.parse(JSON.stringify(this.formsSinglePublish2statusArray2)).reverse().join('');
           this.formsStatus = true;
         } 
       }
@@ -2020,7 +2155,7 @@ export default {
         interval: 5,
 
         tenant_id: 1,
-        "timestamp": moment().unix(),
+        "timestamp": moment().unix()*1000,
 
         device_id1: "cnc_100",
         "data_id1": "state",
@@ -2049,7 +2184,7 @@ export default {
       this.$refs["fastforms"].validate(valid => {
         if (valid) {
           try{
-            if(moment(that.fastforms.start).unix()>moment(that.fastforms.end).unix()){
+            if(moment(that.fastforms.start).unix()*1000>moment(that.fastforms.end).unix()*1000){
               this.$alert('起始时间必须早于中止时间', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {}
@@ -2062,16 +2197,27 @@ export default {
             }  
             this.fastformsStatus = false;
             var result = {}
+            this.fastformsPublish2statusArray1 = [];
             var callBack = ()=>{
           
-              this.fastforms.status1 += "<br>" + `第${n+1}次发送成功:` + JSON.stringify(result);
+              // this.fastforms.status1 += "<br>" + `第${n+1}次发送成功:` + JSON.stringify(result);
+              var one = "<br>" + `第${n+1}次发送成功:` + JSON.stringify(result);
+              this.fastformsPublish2statusArray1.push(one)
+              this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
+
               if(!this.fastformsStatus&&loopBealoon){
                 this.fastformsTimer = setTimeout(pubilcMsg,0)
               }else if(!this.fastformsStatus&&(!loopBealoon)){
-                this.fastforms.status1 += "<br>" + "已到时间，发送完毕"
+                // this.fastforms.status1 += "<br>" + "已到时间，发送完毕"
+                var endWord = "<br>" + "已到时间，发送完毕";
+                this.fastformsPublish2statusArray1.push(endWord);
+                this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
                 this.fastformsStatus = true;
               }else{
-                this.fastforms.status1 += "<br>" + "发送完毕"
+                // this.fastforms.status1 += "<br>" + "发送完毕"
+                var endWord = "<br>" + "发送完毕";
+                this.fastformsPublish2statusArray1.push(endWord);
+                this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
                 this.fastformsStatus = true;
               }
             }
@@ -2081,11 +2227,14 @@ export default {
             var topic = `moe/${that.fastforms.tenant_id}/cnc/${that.fastforms.device_id}/data/general`;
             var qos = 1
             function pubilcMsg(){
-              var num = that.fastforms.timestamp1 + that.fastforms.interval*n
+              var num = that.fastforms.timestamp1 + that.fastforms.interval*n*1000
               if(that.fastforms.end){
-                if(num>moment(that.fastforms.end).unix()){
+                if(num>moment(that.fastforms.end).unix()*1000){
                   loopBealoon = false;
-                  that.fastforms.status1 += "<br>" + "已到时间，发送完毕"
+                  // that.fastforms.status1 += "<br>" + "已到时间，发送完毕"
+                  var endWord = "<br>" + "已到时间，发送完毕";
+                  that.fastformsPublish2statusArray1.push(endWord);
+                  that.fastforms.status1 = JSON.parse(JSON.stringify(that.fastformsPublish2statusArray1)).reverse().join('');
                   that.fastformsStatus = true;
                   return;
                 }else{
@@ -2127,7 +2276,10 @@ export default {
               result = obj;
               that.$mqtt.publish(topic,obj,{qos:qos},callBack, (error) => {
                 if (error) {
-                  this.fastforms.status1 = "error:" + error
+                  var endWord = "error:" + error;
+                  this.fastformsPublish2statusArray1.push(endWord);
+                  this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
+                  // this.fastforms.status1 = "error:" + error
                 }
               }); 
               n++;
@@ -2136,7 +2288,10 @@ export default {
             pubilcMsg();
           }
           catch(error){
-            this.fastforms.status1 = "error:" + error
+            // this.fastforms.status1 = "error:" + error
+            var endWord = "error:" + error;
+            this.fastformsPublish2statusArray1.push(endWord);
+            this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
           }
         }
 
@@ -2146,7 +2301,11 @@ export default {
       if (this.fastformsTimer !== null) {  
         clearTimeout(this.fastformsTimer);  
         this.fastformsTimer = null; // 清除定时器ID，防止重复清除  
-        this.fastforms.status1 += "<br>" + "中止发送"
+        // this.fastforms.status1 += "<br>" + "中止发送"
+        
+        var endWord = "<br>" + "中止发送";
+        this.fastformsPublish2statusArray1.push(endWord);
+        this.fastforms.status1 = JSON.parse(JSON.stringify(this.fastformsPublish2statusArray1)).reverse().join('');
         this.fastformsStatus = true;
       } 
     },
